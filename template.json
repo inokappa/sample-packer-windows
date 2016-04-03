@@ -1,0 +1,23 @@
+{
+    "builders": [{
+        "type": "amazon-ebs",
+        "region": "ap-northeast-1",
+        "source_ami": "ami-57282639",
+        "instance_type": "t2.micro",
+        "ami_name": "windows-ami",
+        "user_data_file": "{{template_dir}}/bootstrap.txt",
+        "communicator": "winrm",
+        "winrm_username": "Administrator",
+        "subnet_id": "subnet-20a89c54",
+        "security_group_ids": ["sg-53c15936"]
+    }],
+
+    "provisioners": [
+        {
+            "type": "powershell",
+            "inline": [
+                "C:\\PROGRA~1\\Amazon\\Ec2ConfigService\\Ec2Config.exe -sysprep"
+            ]
+        }
+    ]
+}

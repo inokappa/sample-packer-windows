@@ -1,0 +1,4 @@
+<powershell>
+tzutil.exe /s "Tokyo Standard Time"
+Set-NetConnectionProfile -NetworkCategory Private
+</powershell>

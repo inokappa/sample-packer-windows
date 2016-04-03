@@ -1,0 +1,29 @@
+<powershell>
+winrm quickconfig -q
+winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="300"}'
+winrm set winrm/config '@{MaxTimeoutms="1800000"}'
+winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+winrm set winrm/config/service/auth '@{Basic="true"}'
+
+netsh advfirewall firewall add rule name="WinRM 5985" protocol=TCP dir=in localport=5985 action=allow
+netsh advfirewall firewall add rule name="WinRM 5986" protocol=TCP dir=in localport=5986 action=allow
+
+net stop winrm
+sc config winrm start=auto
+net start winrm
+
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
+
+mkdir C:\download_files
+
+Invoke-WebRequest -Uri "https://www.python.org/ftp/python/2.7.11/python-2.7.11.amd64.msi" -OutFile C:\download_files\python-2.7.11.amd64.msi
+Start-Process "C:\download_files\python-2.7.11.amd64.msi" /quiet -Wait
+setx PATH "$env:path;C:\Python27;C:\Python27\Scripts" -m
+
+Invoke-WebRequest -Uri "http://heanet.dl.sourceforge.net/project/pywin32/pywin32/Build%20220/pywin32-220.win-amd64-py2.7.exe" -OutFile C:\download_files\pywin32-220.win-amd64-py2.7.exe
+C:\Python27\Scripts\easy_install.exe C:\download_files\pywin32-220.win-amd64-py2.7.exe
+
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1 -OutFile C:\download_files\ConfigureRemotingForAnsible.ps1
+C:\download_files\ConfigureRemotingForAnsible.ps1
+
+</powershell>
